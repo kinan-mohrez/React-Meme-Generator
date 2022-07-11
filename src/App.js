@@ -1,25 +1,37 @@
-import logo from './logo.svg';
 import './App.css';
+import React, { useState, useEffect } from 'react';
+import Memes from './component/Memes';
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+	const [memes, setMemes] = useState([]);
+	const [memeIndex, setMemeIndex] = useState(0);
+
+	useEffect(() => {
+		fetch('https://api.imgflip.com/get_memes')
+			.then((response) => response.json())
+			.then((res) => {
+				// console.log(res);
+				setMemes(res.data.memes);
+				console.log(res.data.memes[0]);
+			});
+	}, []);
+
+	function goBack() {
+		console.log('goBack');
+		setMemeIndex(memeIndex - 1);
+	}
+	function goForward() {
+		console.log('goForward');
+		setMemeIndex(memeIndex + 1);
+	}
+
+	return (
+		<div className='App'>
+			<button onClick={goBack}>Go Back</button>
+			<button onClick={goForward}>Forward</button>
+			<Memes memes={memes} memeIndex={memeIndex} />
+		</div>
+	);
 }
 
 export default App;
